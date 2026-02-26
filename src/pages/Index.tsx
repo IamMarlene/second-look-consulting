@@ -265,7 +265,7 @@ const Index = () => {
               <h3 className="text-2xl font-heading font-bold mb-6 text-foreground">Información de Contacto</h3>
               <div className="space-y-6">
                 {[
-                  { icon: Phone, label: "Teléfono", value: "(385) 2508-214" },
+                  { icon: Phone, label: "Teléfono", value: "(385) 250-8214" },
                   { icon: Mail, label: "Correo Electrónico", value: "info@secondlook.consulting" },
                   { icon: MapPin, label: "Ubicación", value: "Sirviendo a la comunidad latina en todo Estados Unidos" },
                 ].map(({ icon: Icon, label, value }) => (
