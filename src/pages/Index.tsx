@@ -5,34 +5,32 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
+import { useLanguage } from "@/contexts/LanguageContext";
 import heroBg from "@/assets/hero-bg.png";
 import americanFlag from "@/assets/american-flag.png";
 import lawScale from "@/assets/law-scale.png";
 
-const services = [
-  { icon: BookOpen, title: "Traducción de Documentos Legales", desc: "Órdenes del juez, sentencias, mociones, citatorios y notificaciones de audiencia. Reportes policiales, declaraciones juradas. Notificaciones de inmigración, cartas del gobierno, documentos de seguro y más." },
-  { icon: FileText, title: "Explicaciones de Documentos", desc: "Explicaciones claras y sencillas de documentos de la corte, traducidas a un lenguaje que puedas entender." },
-  { icon: FolderOpen, title: "Organización de Expediente", desc: "Organización completa de tu expediente para que tengas todo en orden." },
-  { icon: Clock, title: "Línea de Tiempo", desc: "Creamos una línea de tiempo de tu caso — qué pasó y cuándo — para que veas el panorama completo." },
-  { icon: HelpCircle, title: "Preparación de Preguntas", desc: "Te ayudamos a preparar preguntas inteligentes para tu abogado antes de tu próxima reunión." },
-  { icon: Receipt, title: "Revisión de Facturas", desc: "Si tienes dudas sobre lo que te están cobrando, revisamos tus facturas legales." },
-];
-
-const notDo = [
-  "No damos asesoría legal",
-  "No representamos en corte",
-  "No sustituimos a tu abogado",
-];
-
-const steps = [
-  { icon: Upload, num: "1", title: "Envíanos tus documentos", desc: "Comparte los documentos de tu caso de forma segura. Aceptamos copias físicas o digitales." },
-  { icon: Search, num: "2", title: "Revisamos tu caso cuidadosamente", desc: "Nuestro equipo de abogados retirados analiza cada detalle de tu expediente con atención." },
-  { icon: FileCheck, num: "3", title: "Te entregamos un resumen claro", desc: "Recibes un informe organizado y fácil de entender, con una línea de tiempo y puntos clave." },
-];
-
 const Index = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+
+  const services = [
+    { icon: BookOpen, titleKey: "services.translation.title", descKey: "services.translation.desc" },
+    { icon: FileText, titleKey: "services.explanation.title", descKey: "services.explanation.desc" },
+    { icon: FolderOpen, titleKey: "services.organization.title", descKey: "services.organization.desc" },
+    { icon: Clock, titleKey: "services.timeline.title", descKey: "services.timeline.desc" },
+    { icon: HelpCircle, titleKey: "services.questions.title", descKey: "services.questions.desc" },
+    { icon: Receipt, titleKey: "services.billing.title", descKey: "services.billing.desc" },
+  ];
+
+  const notDo = ["notDo.1", "notDo.2", "notDo.3"];
+
+  const steps = [
+    { icon: Upload, num: "1", titleKey: "how.step1.title", descKey: "how.step1.desc" },
+    { icon: Search, num: "2", titleKey: "how.step2.title", descKey: "how.step2.desc" },
+    { icon: FileCheck, num: "3", titleKey: "how.step3.title", descKey: "how.step3.desc" },
+  ];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,11 +42,11 @@ const Index = () => {
         headers: { Accept: "application/json" },
       });
       if (!res.ok) throw new Error("Form submission failed");
-      toast({ title: "Mensaje enviado", description: "Nos pondremos en contacto contigo pronto." });
+      toast({ title: t("toast.success.title"), description: t("toast.success.desc") });
       setForm({ name: "", email: "", phone: "", message: "" });
     } catch (err) {
       console.error(err);
-      toast({ title: "No se pudo enviar", description: "Intenta de nuevo en unos minutos.", variant: "destructive" });
+      toast({ title: t("toast.error.title"), description: t("toast.error.desc"), variant: "destructive" });
     }
   };
 
@@ -62,21 +60,21 @@ const Index = () => {
         <div className="relative container mx-auto px-4 py-24 md:py-32">
           <div className="max-w-2xl animate-fade-in-up">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight mb-6">
-              Una Segunda Mirada a Tu Caso Legal
+              {t("hero.title")}
             </h1>
             <p className="text-lg md:text-xl text-navy-foreground/80 mb-8 leading-relaxed">
-              Te ayudamos a entender tus documentos de la corte y lo que pasó en tu caso — en español y sin complicaciones.
+              {t("hero.subtitle")}
             </p>
             <div className="flex flex-wrap gap-4 mb-8">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8">
-                <a href="#contacto">Solicita una Revisión <ArrowRight className="ml-2 h-4 w-4" /></a>
+                <a href="#contacto">{t("hero.cta1")} <ArrowRight className="ml-2 h-4 w-4" /></a>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-navy-foreground/30 text-navy-foreground bg-navy-foreground/10 hover:bg-navy-foreground/10">
-                <a href="#contacto">Agenda una Consulta</a>
+                <a href="#contacto">{t("hero.cta2")}</a>
               </Button>
             </div>
             <p className="text-sm text-navy-foreground/50 italic">
-              Second Look no es un bufete de abogados. No ofrecemos representación legal.
+              {t("hero.disclaimer")}
             </p>
           </div>
         </div>
@@ -87,23 +85,23 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: Shield, title: "Confianza", desc: "Abogados retirados con décadas de experiencia a tu servicio." },
-              { icon: FileText, title: "Claridad", desc: "Explicamos tus documentos legales en español y de forma sencilla." },
-              { icon: Scale, title: "Transparencia", desc: "Revisión independiente y honesta de tu caso." },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="text-center p-8 rounded-lg bg-card border border-border hover:shadow-lg transition-shadow">
+              { icon: Shield, titleKey: "trust.confidence.title", descKey: "trust.confidence.desc" },
+              { icon: FileText, titleKey: "trust.clarity.title", descKey: "trust.clarity.desc" },
+              { icon: Scale, titleKey: "trust.transparency.title", descKey: "trust.transparency.desc" },
+            ].map(({ icon: Icon, titleKey, descKey }) => (
+              <div key={titleKey} className="text-center p-8 rounded-lg bg-card border border-border hover:shadow-lg transition-shadow">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
                   <Icon className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">{title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">{t(titleKey)}</h3>
+                <p className="text-muted-foreground leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Flag & Scales / About */}
+      {/* About */}
       <section id="nosotros" className="py-16 bg-muted">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
           <div className="md:w-1/3 flex gap-4">
@@ -111,30 +109,25 @@ const Index = () => {
             <img src={lawScale} alt="Scales of justice" className="rounded-lg shadow-md w-1/2 object-contain" />
           </div>
           <div className="md:w-2/3">
-            <h2 className="text-3xl font-heading font-bold mb-4 text-foreground">Quiénes Somos</h2>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              Somos un equipo de abogados retirados con décadas de experiencia en el sistema legal de los Estados Unidos.
-              Entendemos los retos que enfrenta la comunidad latina al navegar el sistema legal.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              Ahora nos enfocamos en revisar y explicar casos legales para que nuestros clientes se sientan informados y seguros al tomar decisiones importantes.
-            </p>
+            <h2 className="text-3xl font-heading font-bold mb-4 text-foreground">{t("about.title")}</h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">{t("about.p1")}</p>
+            <p className="text-muted-foreground leading-relaxed mb-4">{t("about.p2")}</p>
             <p className="text-foreground font-medium leading-relaxed border-l-4 border-primary pl-6">
-              "Nos dedicamos a ayudarte a entender tu situación para que tomes decisiones con mayor seguridad."
+              {t("about.quote")}
             </p>
           </div>
         </div>
         <div className="container mx-auto px-4 mt-12">
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: Users, title: "Equipo Experimentado", desc: "Abogados retirados con amplia experiencia en diversas áreas del derecho." },
-              { icon: BookOpen, title: "Revisión Detallada", desc: "Analizamos cada documento con cuidado para darte respuestas claras." },
-              { icon: Award, title: "Compromiso Contigo", desc: "Tu tranquilidad y comprensión son nuestra prioridad número uno." },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-card p-8 rounded-lg border border-border">
+              { icon: Users, titleKey: "about.team.title", descKey: "about.team.desc" },
+              { icon: BookOpen, titleKey: "about.review.title", descKey: "about.review.desc" },
+              { icon: Award, titleKey: "about.commitment.title", descKey: "about.commitment.desc" },
+            ].map(({ icon: Icon, titleKey, descKey }) => (
+              <div key={titleKey} className="bg-card p-8 rounded-lg border border-border">
                 <Icon className="h-8 w-8 text-primary mb-4" />
-                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">{title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">{t(titleKey)}</h3>
+                <p className="text-muted-foreground leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
           </div>
@@ -144,43 +137,41 @@ const Index = () => {
       {/* Services */}
       <section id="servicios" className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 text-foreground">Nuestros Servicios</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mb-10">Servicios diseñados para darte claridad y confianza sobre tu situación legal.</p>
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 text-foreground">{t("services.title")}</h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mb-10">{t("services.subtitle")}</p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-card p-6 rounded-lg border border-border hover:shadow-lg transition-shadow">
+            {services.map(({ icon: Icon, titleKey, descKey }) => (
+              <div key={titleKey} className="bg-card p-6 rounded-lg border border-border hover:shadow-lg transition-shadow">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
                   <Icon className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="font-heading text-lg font-semibold mb-2 text-foreground">{title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
+                <h3 className="font-heading text-lg font-semibold mb-2 text-foreground">{t(titleKey)}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Áreas de Enfoque Legal */}
+      {/* Legal Areas */}
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 text-foreground">Áreas de Enfoque Legal</h2>
-          <p className="text-muted-foreground text-lg max-w-3xl mb-10 leading-relaxed">
-            En Second Look trabajamos con documentación y materiales de casos en diversas áreas del derecho. Nuestro enfoque es ayudarte a comprender tus documentos con claridad, organizar la información de tu caso y ofrecer traducción precisa de documentos legales del inglés al español.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 text-foreground">{t("areas.title")}</h2>
+          <p className="text-muted-foreground text-lg max-w-3xl mb-10 leading-relaxed">{t("areas.subtitle")}</p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: Scale, title: "Derecho de Inmigración", desc: "Revisión, explicación y traducción de notificaciones migratorias, documentos de la corte de inmigración, solicitudes, decisiones y correspondencia oficial." },
-              { icon: Users, title: "Derecho Familiar", desc: "Documentos relacionados con divorcio, custodia, manutención, órdenes de protección y procesos de la corte familiar." },
-              { icon: Award, title: "Derecho Comercial / Empresarial", desc: "Contratos comerciales, acuerdos entre socios, documentos corporativos y disputas contractuales." },
-              { icon: Shield, title: "Derecho Penal", desc: "Órdenes judiciales, sentencias, acuerdos, reportes policiales y documentos procesales." },
-              { icon: FileText, title: "Asuntos Civiles y Otros Procesos Legales", desc: "Demandas civiles, reclamaciones de seguros, disputas contractuales y notificaciones gubernamentales." },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-card p-6 rounded-lg border border-border hover:shadow-lg transition-shadow">
+              { icon: Scale, titleKey: "areas.immigration.title", descKey: "areas.immigration.desc" },
+              { icon: Users, titleKey: "areas.family.title", descKey: "areas.family.desc" },
+              { icon: Award, titleKey: "areas.business.title", descKey: "areas.business.desc" },
+              { icon: Shield, titleKey: "areas.criminal.title", descKey: "areas.criminal.desc" },
+              { icon: FileText, titleKey: "areas.civil.title", descKey: "areas.civil.desc" },
+            ].map(({ icon: Icon, titleKey, descKey }) => (
+              <div key={titleKey} className="bg-card p-6 rounded-lg border border-border hover:shadow-lg transition-shadow">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
                   <Icon className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="font-heading text-lg font-semibold mb-2 text-foreground">{title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
+                <h3 className="font-heading text-lg font-semibold mb-2 text-foreground">{t(titleKey)}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
           </div>
@@ -190,12 +181,12 @@ const Index = () => {
       {/* What we don't do */}
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4 max-w-2xl">
-          <h2 className="text-2xl font-heading font-bold mb-6 text-foreground">Lo que NO Hacemos</h2>
+          <h2 className="text-2xl font-heading font-bold mb-6 text-foreground">{t("notDo.title")}</h2>
           <div className="space-y-4">
-            {notDo.map((item) => (
-              <div key={item} className="flex items-center gap-3 bg-card p-4 rounded-lg border border-border">
+            {notDo.map((key) => (
+              <div key={key} className="flex items-center gap-3 bg-card p-4 rounded-lg border border-border">
                 <XCircle className="h-5 w-5 text-destructive flex-shrink-0" />
-                <span className="text-foreground">{item}</span>
+                <span className="text-foreground">{t(key)}</span>
               </div>
             ))}
           </div>
@@ -205,18 +196,18 @@ const Index = () => {
       {/* How it works */}
       <section id="como-funciona" className="py-20 bg-background">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 text-foreground">Cómo Funciona</h2>
-          <p className="text-muted-foreground text-lg mb-12">Un proceso simple y transparente para darte tranquilidad.</p>
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 text-foreground">{t("how.title")}</h2>
+          <p className="text-muted-foreground text-lg mb-12">{t("how.subtitle")}</p>
           <div className="space-y-12">
-            {steps.map(({ icon: Icon, num, title, desc }) => (
+            {steps.map(({ icon: Icon, num, titleKey, descKey }) => (
               <div key={num} className="flex gap-6 items-start">
                 <div className="flex-shrink-0 w-16 h-16 rounded-full bg-primary flex items-center justify-center">
                   <Icon className="h-7 w-7 text-primary-foreground" />
                 </div>
                 <div>
-                  <span className="text-sm font-semibold text-primary uppercase tracking-wide">Paso {num}</span>
-                  <h3 className="font-heading text-xl font-bold text-foreground mt-1 mb-2">{title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                  <span className="text-sm font-semibold text-primary uppercase tracking-wide">{t("how.step")} {num}</span>
+                  <h3 className="font-heading text-xl font-bold text-foreground mt-1 mb-2">{t(titleKey)}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{t(descKey)}</p>
                 </div>
               </div>
             ))}
@@ -227,10 +218,8 @@ const Index = () => {
       {/* Contact */}
       <section id="contacto" className="py-16 bg-navy text-navy-foreground">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">Contacto</h2>
-          <p className="text-navy-foreground/70 text-lg max-w-2xl mb-12">
-            Obtén claridad sobre tu caso hoy. Estamos aquí para ayudarte.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">{t("contact.title")}</h2>
+          <p className="text-navy-foreground/70 text-lg max-w-2xl mb-12">{t("contact.subtitle")}</p>
         </div>
       </section>
 
@@ -238,53 +227,53 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             <div>
-              <h3 className="text-2xl font-heading font-bold mb-6 text-foreground">Envíanos un Mensaje</h3>
+              <h3 className="text-2xl font-heading font-bold mb-6 text-foreground">{t("contact.form.title")}</h3>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1 block">Nombre</label>
-                  <Input name="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required placeholder="Tu nombre completo" />
+                  <label className="text-sm font-medium text-foreground mb-1 block">{t("contact.form.name")}</label>
+                  <Input name="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required placeholder={t("contact.form.namePlaceholder")} />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1 block">Correo Electrónico</label>
-                  <Input name="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required placeholder="tu@email.com" />
+                  <label className="text-sm font-medium text-foreground mb-1 block">{t("contact.form.email")}</label>
+                  <Input name="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required placeholder={t("contact.form.emailPlaceholder")} />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1 block">Teléfono</label>
-                  <Input name="phone" type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="(555) 123-4567" />
+                  <label className="text-sm font-medium text-foreground mb-1 block">{t("contact.form.phone")}</label>
+                  <Input name="phone" type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={t("contact.form.phonePlaceholder")} />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1 block">Mensaje</label>
-                  <Textarea name="message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required rows={5} placeholder="Cuéntanos sobre tu caso..." />
+                  <label className="text-sm font-medium text-foreground mb-1 block">{t("contact.form.message")}</label>
+                  <Textarea name="message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required rows={5} placeholder={t("contact.form.messagePlaceholder")} />
                 </div>
                 <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-                  Enviar Mensaje
+                  {t("contact.form.submit")}
                 </Button>
               </form>
             </div>
             <div>
-              <h3 className="text-2xl font-heading font-bold mb-6 text-foreground">Información de Contacto</h3>
+              <h3 className="text-2xl font-heading font-bold mb-6 text-foreground">{t("contact.info.title")}</h3>
               <div className="space-y-6">
                 {[
-                  { icon: Phone, label: "Teléfono", value: "(385) 250-8214" },
-                  { icon: Mail, label: "Correo Electrónico", value: "info@secondlook.consulting" },
-                  { icon: MapPin, label: "Ubicación", value: "Sirviendo a la comunidad latina en todo Estados Unidos" },
-                ].map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="flex items-start gap-4">
+                  { icon: Phone, labelKey: "contact.info.phone", value: "(385) 250-8214" },
+                  { icon: Mail, labelKey: "contact.info.email", value: "info@secondlook.consulting" },
+                  { icon: MapPin, labelKey: "contact.info.location", valueKey: "contact.info.locationValue" },
+                ].map(({ icon: Icon, labelKey, value, valueKey }) => (
+                  <div key={labelKey} className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <Icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-foreground">{label}</p>
-                      <p className="text-muted-foreground">{value}</p>
+                      <p className="text-sm font-medium text-foreground">{t(labelKey)}</p>
+                      <p className="text-muted-foreground">{valueKey ? t(valueKey) : value}</p>
                     </div>
                   </div>
                 ))}
               </div>
               <div className="mt-8 p-6 bg-muted rounded-lg border border-border">
-                <h4 className="font-heading font-semibold text-foreground mb-2">Horario de Atención</h4>
-                <p className="text-sm text-muted-foreground">Lunes a Viernes: 9:00 AM – 5:00 PM</p>
-                <p className="text-sm text-muted-foreground">Sábado: 10:00 AM – 2:00 PM</p>
-                <p className="text-sm text-muted-foreground">Domingo: Cerrado</p>
+                <h4 className="font-heading font-semibold text-foreground mb-2">{t("contact.hours.title")}</h4>
+                <p className="text-sm text-muted-foreground">{t("contact.hours.weekdays")}</p>
+                <p className="text-sm text-muted-foreground">{t("contact.hours.saturday")}</p>
+                <p className="text-sm text-muted-foreground">{t("contact.hours.sunday")}</p>
               </div>
             </div>
           </div>
@@ -294,12 +283,10 @@ const Index = () => {
       {/* Final CTA */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-heading font-bold mb-4">Obtén Claridad Sobre Tu Caso Hoy</h2>
-          <p className="mb-8 text-primary-foreground/80 max-w-xl mx-auto">
-            No tienes que entender todo solo. Déjanos ayudarte a ver tu caso con claridad.
-          </p>
+          <h2 className="text-3xl font-heading font-bold mb-4">{t("cta.title")}</h2>
+          <p className="mb-8 text-primary-foreground/80 max-w-xl mx-auto">{t("cta.desc")}</p>
           <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8">
-            <a href="#contacto">Contáctanos <ArrowRight className="ml-2 h-4 w-4" /></a>
+            <a href="#contacto">{t("cta.button")} <ArrowRight className="ml-2 h-4 w-4" /></a>
           </Button>
         </div>
       </section>
