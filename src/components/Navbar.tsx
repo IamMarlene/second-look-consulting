@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.svg";
-
-const links = [
-  { to: "#inicio", label: "Inicio" },
-  { to: "#nosotros", label: "Quiénes Somos" },
-  { to: "#servicios", label: "Servicios" },
-  { to: "#como-funciona", label: "Cómo Funciona" },
-  { to: "#contacto", label: "Contacto" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { lang, setLang, t } = useLanguage();
+
+  const links = [
+    { to: "#inicio", label: t("nav.home") },
+    { to: "#nosotros", label: t("nav.about") },
+    { to: "#servicios", label: t("nav.services") },
+    { to: "#como-funciona", label: t("nav.howItWorks") },
+    { to: "#contacto", label: t("nav.contact") },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 bg-navy text-navy-foreground shadow-lg">
@@ -31,6 +33,12 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
+          <button
+            onClick={() => setLang(lang === "es" ? "en" : "es")}
+            className="ml-2 px-3 py-1 rounded border border-navy-foreground/30 text-xs font-semibold uppercase tracking-wide text-navy-foreground/80 hover:bg-navy-foreground/10 transition-colors"
+          >
+            {lang === "es" ? "EN" : "ES"}
+          </button>
         </div>
 
         {/* Mobile toggle */}
@@ -52,6 +60,12 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
+          <button
+            onClick={() => { setLang(lang === "es" ? "en" : "es"); setOpen(false); }}
+            className="mt-2 px-3 py-1 rounded border border-navy-foreground/30 text-xs font-semibold uppercase tracking-wide text-navy-foreground/80 hover:bg-navy-foreground/10 transition-colors"
+          >
+            {lang === "es" ? "English" : "Español"}
+          </button>
         </div>
       )}
     </nav>
